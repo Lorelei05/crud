@@ -1,49 +1,67 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.2/firebase-app.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  onSnapshot,
-  addDoc,
-  deleteDoc,
-  doc,
-  getDoc,
-  updateDoc,
-} from "https://www.gstatic.com/firebasejs/9.6.2/firebase-firestore.js";
+import { saveTask, onGetTasks, deleteTask, getTask, updateTask,
+  saveImage } from './firebase.js';
+import { card } from './ui.js';
 
+const formTask = document.querySelector('#task-form');
+const taskContainer = document.querySelector('#tasks-container');
+let editStatus = false;
+let idForEdit = '';
 
-const firebaseConfig = {
+const actionButtons =  async ({target}) => {
+if(target.classList.contains('delet')){
+  deleteTask(target.getAttribute('data-id'));
+}
+if(target.classList.contains('edit')){
+  const id = target.getAttribute('data-id');
+  const doc = await getTask(id);
+  const task = doc.data();
+  formTask['task-title'].value = task.title;
+  formTask['task-description'].value = task.description;
+  editStatus = true;
+  idForEdit = id;
+  document.querySelector('#btn-task-save').innerText = 'Update';
+}
+}
 
-};
+const saveSubmit = (e) => {
+e.preventDefault();
+const title = formTask['task-title'];
+const description = formTask['task-description'];
 
-// Inicializando Firebase
-export const app = initializeApp(firebaseConfig);
+if(!editStatus){
+  saveTask(title.value, description.value);   
+} else {
+  updateTask(idForEdit, {
+      'title': title.value, 'description': description.value
+  });
+  editStatus = false;
+  document.querySelector('#btn-task-save').innerText = 'Save';
+}
 
-export const db = getFirestore();
+formTask.reset();
+}
 
-/**
- * Save a New Task in Firestore
- * @param {string} title the title of the Task
- * @param {string} description the description of the Task
- */
-export const saveTask = (title, description) =>
-  addDoc(collection(db, "tasks"), { title, description });
+const uploadFileAction = (e) => {
+const file = e.target.files[0];
 
-export const onGetTasks = (callback) =>
-  onSnapshot(collection(db, "tasks"), callback);
+//console.log(file.type);
+saveImage(file);
+}
 
-/**
- *
- * @param {string} id Task ID
- */
-export const deleteTask = (id) => deleteDoc(doc(db, "tasks", id));
+window.addEventListener('DOMContentLoaded', async () => {
 
-export const getTask = (id) => getDoc(doc(db, "tasks", id));
+onGetTasks(querySnapshot => {
+  if(taskContainer.firstChild)
+      taskContainer.removeChild(taskContainer.firstChild)
+  const div = document.createElement('div');
+  querySnapshot.forEach(doc => {
+      const task = doc.data();
+      div.appendChild(card(doc.id, task.title, task.description))
+  });
+  taskContainer.appendChild(div);
+});
 
-export const updateTask = (id, newFields) =>
-  updateDoc(doc(db, "tasks", id), newFields);
-
-export const getTasks = () => getDocs(collection(db, "tasks"));
+document.querySelector('#tasks-container').addEventListener('click', actionButtons);
+formTask.addEventListener('submit', saveSubmit);
+document.querySelector('#file-task').addEventListener('change', uploadFileAction);
+});
