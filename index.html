@@ -1,25 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css">
     <title>CRUD</title>
-</head>
-<body>
-    <form id="task-form">
 
-        <label for="title">Title:</Title></label>
-        <input type="text" placeholder="Task Title" id="task-title">
 
-        <label for="description">Description:</label>
-        <textarea id="task-description" rows="3" placeholder="Task Description"></textarea>
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/5/yeti/bootstrap.min.css"
+    />
+  </head>
 
-        <button id="btn-task-save">Save:</button>
+  <body class="bg-dark">
 
-    </form>
+    <div class="container p-4">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h1 class="h4">Lorelei</h1>
 
-    <div id="tasks-container"></div>
-    <script src="./index.js"></script>
-</body>
+              <form id="task-form">
+                <label for="title">Titulo:</label>
+                <input
+                  type="text"
+                  id="task-title"
+                  class="form-control mb-3"
+                  class="My First Title"
+                  placeholder="Task Title"
+                  autofocus
+                />
+
+                <label for="description">Descripcion:</label>
+                <textarea
+                  id="task-description"
+                  rows="3"
+                  class="form-control mb-3"
+                  placeholder="Task Description"
+                ></textarea>
+
+                <button class="btn btn-primary" id="btn-task-form">Save</button>
+              </form>
+            </div>
+          </div>
+        </div>
+       
+        <div class="col-md-6" id="tasks-container"></div>
+      </div>
+    </div>
+
+    <!-- CUSTOM CODE -->
+    <script src="./index.js" type="module"></script>
+  </body>
 </html>
