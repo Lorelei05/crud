@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { collection, getFirestore, addDoc, getDocs, 
         onSnapshot, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable,uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -38,46 +38,26 @@ export const updateTask = (id, newFields) => updateDoc(doc(db, 'tasks', id), new
 
 export const saveImage = file => {
   console.log(file);
-
-    const storageRef = ref(storage, `images/${file.name}`);
-
-    uploadBytes(storageRef, file).then((snapshot)=> {
-    console.log('uploaded a blob or file!');
-
-    });
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   /* const uploadTask = uploadBytesResumable(storageRef, file);
+  const storageRef = ref(storage, `imagenes/${file.name}`);
+  
+  const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on('state_changed', 
     (snapshot) => {
     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    console.log('Upload is ' + progress + '% done');
+   document.querySelector('#progress').value = progress;
     },
     (error) => {
         
     }, 
     () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        document.querySelector('#image').src = downloadURL;
         console.log('File available at', downloadURL);
         });
     }
     );
-*/
+
+  }
+
+
