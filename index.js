@@ -25,20 +25,28 @@ if(target.classList.contains('edit')){
 
 const saveSubmit = (e) => {
 e.preventDefault();
-const title = formTask['task-title'];
-const description = formTask['task-description'];
+const title = formTask['task-title'].value;
+const description = formTask['task-description'].value;
+const iamageUrl = document.querySelector('#image').src;
+
+if (title.length > 3 && description.length > 3) {
 
 if(!editStatus){
-  saveTask(title.value, description.value);   
+  saveTask(title, description, iamageUrl); 
+  document.querySelector('#image').src = ''; 
 } else {
   updateTask(idForEdit, {
-      'title': title.value, 'description': description.value
+      'title': title, 'description': description
   });
   editStatus = false;
   document.querySelector('#btn-task-save').innerText = 'Save';
 }
 
 formTask.reset();
+} else{
+  alert('Debes escribir algo');
+}
+
 }
 
 const uploadFileAction = (e) => {
