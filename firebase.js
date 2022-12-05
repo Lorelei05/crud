@@ -2,12 +2,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { collection, getFirestore, addDoc, getDocs, 
         onSnapshot, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+// Your web app's Firebase configuration    
+
 const firebaseConfig = {
   apiKey: "AIzaSyCoDPngLaZ40UYgH84A4PU9RgJT8J_-i3I",
   authDomain: "friendlychat-20c4e.firebaseapp.com",
@@ -22,9 +23,9 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore();
 
-const storage = getStorage(app);
+export const storage = getStorage(app);
 
-export const saveTask = (title, description, imageUrl) => addDoc(collection(db, 'tasks'), { title, description, imageUrl });
+export const saveTask = (title, description, imageUrl, imageName) => addDoc(collection(db, 'tasks'), { title, description, imageUrl, imageName });
 
 export const getTasks = () => getDocs(collection(db, 'tasks'));
 
@@ -45,7 +46,7 @@ export const saveImage = file => {
     uploadTask.on('state_changed', 
     (snapshot) => {
     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-   document.querySelector('#progress').value = progress;
+    document.querySelector('#progress').value = progress;
     },
     (error) => {
         
@@ -60,4 +61,17 @@ export const saveImage = file => {
 
   }
 
+    const deleteImageTask = imageName =>{
+        // Create a reference to the file to delete
+    const desertRef = ref(storage, `images/${imageName}`);
+
+    // Delete the file
+    deleteObject(desertRef).then(() => {
+      // File deleted successfully
+      console.log('Todo esta bien')
+    }).catch((error) => {
+      // Uh-oh, an error occurred!
+      console.log('Algo fallo')
+    });
+      }
 
